@@ -1,12 +1,13 @@
 import random
 import time
 import matplotlib.pyplot as plt
-from Algorithm_File import Algorithm
+from counting import bubbleSort as Algorithm
 import numpy as np
 from sklearn.linear_model import LinearRegression
 import math
 import threading
 
+starttime = time.time()
 
 invoergrootte = []
 uitvoertijd = []
@@ -36,16 +37,8 @@ for i in range(5,1000,3):
     end = time.time()
     uitvoertijd.append(end - begin)     
 
-
 InputSize = np.array(invoergrootte).reshape((-1,1))
 ProcessTime = np.array(uitvoertijd)
-
-
-
-
-
-
-
 
 #hier komt de lineaire regressie
 def linear():
@@ -54,6 +47,7 @@ def linear():
     linear_R = Line.score(InputSize, ProcessTime)
     R_values.append(linear_R)
     return linear_R
+
 #kwadratische regressie, ook met sklearn
 def quadrat():
     InputSize_squared = []
@@ -121,16 +115,22 @@ threading.Thread(target=logarithm).start()
 threading.Thread(target=expo).start()
 threading.Thread(target=linarithm).start()
 
+""" linear()
+quadrat()
+logarithm()
+expo()
+linarithm() """
 
 Rs = np.array(R_values)
 comps = ["n", "n^2", "log (n)", "2^n", "n * log(n)"]
-REEE = np.amax(Rs)
-answer = ""
+confidence = np.amax(Rs)
+complexity = ""
 for i in range(len(R_values)):
-    if R_values[i] == REEE:
-        answer = comps[i]
+    if R_values[i] == confidence:
+        complexity = comps[i]
     else:
         continue
 
-print("the time complexity of this algorithm is " + answer + "with an R^2 value of" + str(REEE))
+print("------Took {}------".format(time.time() - starttime))
+print("the time complexity of this algorithm is {} with an R^2 value of {}".format(complexity, confidence))
 
