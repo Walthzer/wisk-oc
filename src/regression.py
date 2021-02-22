@@ -137,8 +137,8 @@ confidence = np.amax(Rs)    #hier wordt de grootste R^2-waarde gekozen.
 complexity = ""
 
 for i in range(len(R_values)):
-    if R_values[i] == REEE:
-        answer = comps[i]
+    if R_values[i] == confidence:
+        complexity = comps[i]
     else:
         continue
 
