@@ -2,15 +2,19 @@
 
 import random    #genereert willekeurige getallen
 import time     #meet de tijd
-from Algorithm_File import Algorithm #hier zit het gekozen algoritme waarvan de gemiddelde complexiteit wordt berekend.
+from counting import bubbleSort as Algorithm #hier zit het gekozen algoritme waarvan de gemiddelde complexiteit wordt berekend.
 import numpy as np #helpt bij regressie
 from sklearn.linear_model import LinearRegression #voert regressies uit
 import math #voor additionele wiskundige operaties
 import threading #voor parallel uitvoeren functies
+
+#Sla de start tijd op zodat de totale duratie van het programma gerapporteerd kan worden.
+starttime = time.time()
+
 #de volgende drie commanod's stellen rijen voor
-invoergrootte = [] #bevat straks invoergroottes van lijsten waarop gekozen algoritme wordt uitgevoerd, in toenemende volgorde
-uitvoertijd = [] #bevat straks alle uitvoertijden van elke keer dat het gekozen algoritme wordt uitgevoerd, in toenemende volgorde
-R_values = []#bevat straks alle R^2 waarden die door de regressies worden berekend.
+invoergrootte = []  #bevat straks invoergroottes van lijsten waarop gekozen algoritme wordt uitgevoerd, in toenemende volgorde
+uitvoertijd = []    #bevat straks alle uitvoertijden van elke keer dat het gekozen algoritme wordt uitgevoerd, in toenemende volgorde
+R_values = []       #bevat straks alle R^2 waarden die door de regressies worden berekend.
 
 for i in range(5,1000,3):
     invoergrootte.append(i) #voegt invoergroottes toe van lijsten die straks worden gebruikt voor uitvoering gekozen algoritme
@@ -37,16 +41,10 @@ for i in range(5,1000,3):
     end = time.time()
     uitvoertijd.append(end - begin)     
 
+#hier komt de lineaire regressie
     
-InputSize = np.array(invoergrootte).reshape((-1,1))#invoergrootte wordt naar een kolommatrix genaamd InputSize omgezet, wat straks nodig is voor de regressie.
-ProcessTime = np.array(uitvoertijd)#uitvoergrootte wordt naar een rij genaamd ProcessTime omgezet die in combinatie met de kolommatrix kan worden gebruikt.
-
-
-
-
-
-
-
+InputSize = np.array(invoergrootte).reshape((-1,1))   #invoergrootte wordt naar een kolommatrix genaamd InputSize omgezet, wat straks nodig is voor de regressie.
+ProcessTime = np.array(uitvoertijd)                   #uitvoergrootte wordt naar een rij genaamd ProcessTime omgezet die in combinatie met de kolommatrix kan worden gebruikt.
 
 #hier wordt de lineaire regressie opgebouwd
 def linear():
@@ -55,7 +53,8 @@ def linear():
     linear_R = Line.score(InputSize, ProcessTime)#berekening R^2 waarde
     R_values.append(linear_R)#Toevoeging waarde aan R_values
     return linear_R
-#kwadratische regressie
+  
+#kwadratische regressie, ook met sklearn
 def quadrat():
     InputSize_squared = []
     for i in invoergrootte:
@@ -133,16 +132,15 @@ threading.Thread(target=linarithm).start()
 
 
 Rs = np.array(R_values)
-comps = ["n", "n^2", "log (n)", "2^n", "n * log(n)"]#rij met mogelijke complexiteiten
-REEE = np.amax(Rs)#hier wordt de grootste R^2-waarde gekozen.
+comps = ["n", "n^2", "log (n)", "2^n", "n * log(n)"]    #rij met mogelijke complexiteiten
+confidence = np.amax(Rs)    #hier wordt de grootste R^2-waarde gekozen.
+complexity = ""
 
-answer = ""#hier komt uiteindelijk de uitkomst in te staan
-#deze commando's gaan na met welke regressie de grootste R^2-waare overeen stemt
 for i in range(len(R_values)):
     if R_values[i] == REEE:
         answer = comps[i]
     else:
         continue
 
-print("the time complexity of this algorithm is " + answer + "with an R^2 value of" + str(REEE))#dit commando toont de uitkomst van het programma
-
+print("------Took {}------".format(time.time() - starttime))    #Toon de totale tijd die het programma nodig had.
+print("the time complexity of this algorithm is {} with an R^2 value of {}".format(complexity, confidence))   #dit commando toont de uitkomst van het programma
