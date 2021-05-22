@@ -51,3 +51,46 @@ def bubbleSort(arr):
                 
     return arr
  
+ 
+ def selectionsort(arr):
+    for i in range(len(arr)):
+      
+        # Find the minimum element in remaining 
+        # unsorted array
+        min_idx = i
+        for j in range(i+1, len(arr)):
+            if A[min_idx] > arr[j]:
+                min_idx = j
+              
+        # Swap the found minimum element with 
+        # the first element        
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+    return arr
+        
+def shellSort(arr):
+    gap = len(arr) // 2 # intiliaze the gap
+ 
+    while gap > 0:
+        i = 0
+        j = gap
+         
+        # check the array in from left to right
+        # till the last possible index of j
+        while j < len(arr):
+     
+            if arr[i] >arr[j]:
+                arr[i],arr[j] = arr[j],arr[i]
+             
+            i += 1
+            j += 1
+         
+        # now we cannot move towards left anymore so
+        # check the element from last index of i towards to left side of the array
+        while i - gap != -1:
+ 
+            if arr[i - gap] > arr[i]:
+                arr[i-gap],arr[i] = arr[i],arr[i-gap]
+            i -= 1
+ 
+        gap //= 2
+    return arr
